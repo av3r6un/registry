@@ -1,0 +1,46 @@
+services:
+  nginx-admin:
+    image: ${NGINX_ADMIN_IMAGE:-av3rgun/nginx-admin:latest}
+    container_name: nginx-admin
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8081
+      DB_PATH: /app/backend/data/app.db
+      STATIC_DIR: /app/frontend/dist
+      NGINX_BIN: /usr/sbin/nginx
+      NGINX_TEST_COMMAND: /usr/sbin/nginx -t
+      NGINX_SITES_AVAILABLE: /etc/nginx/sites-available
+      NGINX_SITES_ENABLED: /etc/nginx/sites-enabled
+      NGINX_STREAMS_AVAILABLE: /etc/nginx/streams-available
+      NGINX_STREAMS_ENABLED: /etc/nginx/streams-enabled
+      NGINX_BACKUP_DIR: /app/backend/runtime/backups
+      CERTBOT_BIN: /usr/bin/certbot
+      CERTBOT_WEBROOT: /var/www/certbot
+      LETSENCRYPT_DIR: /etc/letsencrypt
+      CERTBOT_WORK_DIR: /var/lib/letsencrypt
+      CERTBOT_LOGS_DIR: /var/log/letsencrypt
+      CERTBOT_EMAIL: ${CERTBOT_EMAIL:-}
+      CERTBOT_STAGING: ${CERTBOT_STAGING:-0}
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER:-}
+      BASIC_AUTH_PASS: ${BASIC_AUTH_PASS:-}
+    volumes:
+      - nginx_admin_data:/app/backend/data
+      - nginx_admin_available:/etc/nginx/sites-available
+      - nginx_admin_streams_available:/etc/nginx/streams-available
+      - ./nginx_backups:/app/backend/runtime/backups
+      - /etc/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - /etc/nginx/streams-enabled:/etc/nginx/streams-enabled
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/certbot:/var/www/certbot
+      - nginx_admin_certbot_work:/var/lib/letsencrypt
+      - nginx_admin_certbot_logs:/var/log/letsencrypt
+
+volumes:
+  nginx_admin_data:
+  nginx_admin_available:
+  nginx_admin_streams_available:
+  nginx_admin_certbot_work:
+  nginx_admin_certbot_logs:

@@ -1,0 +1,54 @@
+.git
+.github
+.gitignore
+.dockerignore
+
+# Local environment and secrets
+.env
+.env.*
+
+# Python local state
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+.python-version
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+.venv
+venv
+env
+.uv-cache
+backend/venv
+
+# Runtime data
+logs
+*.log
+app.db
+*.db
+*.sqlite
+*.sqlite3
+backend/data
+backend/runtime
+nginx_backups
+
+# Frontend local state
+node_modules
+registry/node_modules
+registry/dist
+frontend
+
+# Local scratch/deploy artifacts
+pipeline.txt
+deploy
+*-old
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea
+.vscode
