@@ -1,0 +1,43 @@
+main:
+  title: Главная
+  load_failed: Произошла ошибка при загрузке
+
+general:
+  on: вкл
+  off: выкл
+  input_placeholder: Введите текст
+  selection_placeholder: Выберите значение
+
+domain:
+  config:
+    title: Конфигурация
+
+edit:
+  edit_title: Изменить запись
+  create_title: Создать запись
+  form:
+    domain: Домен
+    proxy_type: Тип прокси
+    port: Порт
+    aliases: Альтернативные имена
+    upstream: Целевой IP
+    listen_port: Прослушиваемый порт
+    upstream_port: Целевой IP
+    scheme: Протокол
+    redirect: Перенаправление
+    submit: Сохранить
+    cancel: Отмена
+
+domains:
+  title: Записи
+  table:
+    ssl: SSL
+    name: Название
+    aliases: Альтернативные имена
+    listen: Listen
+    type: Тип
+    upstream: Целевой адрес
+    redirect: Переадресация
+    websocket: Websocket
+    actions: Действия
+    config_file: Config file

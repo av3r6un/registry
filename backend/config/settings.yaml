@@ -1,0 +1,11 @@
+NGINX_TEST_COMMAND: /usr/sbin/nginx -t
+NGINX_RELOAD_COMMAND: /usr/sbin/nginx -s reload
+NGINX_SITES_AVAILABLE: /etc/nginx/sites-available
+NGINX_SITES_ENABLED: /etc/nginx/sites-enabled
+NGINX_STREAMS_AVAILABLE: /etc/nginx/streams-available
+NGINX_STREAMS_ENABLED: /etc/nginx/streams-enabled
+CERTBOT_WEBROOT: /var/www/certbot
+CERTBOT_STAGING: false
+LETSENCRYPT_DIR: /etc/letsencrypt
+CERTBOT_WORK_DIR: /var/lib/letsencrypt
+CERTBOT_LOGS_DIR: /var/log/letsencrypt

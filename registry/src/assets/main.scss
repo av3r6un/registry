@@ -1,0 +1,138 @@
+@import './variables.scss';
+@import './css/reset.css';
+@import './css/fonts.css';
+
+body {
+  background: url('../../public/img/bg.jpg') no-repeat 50% 50% / cover;
+  background-attachment: fixed;
+  color: $white;
+  font-family: $text-font;
+}
+
+.base{
+  &_title{
+    font-size: $subtitle-size;
+  }
+}
+
+.btn{
+  cursor: pointer;
+  &:disabled{
+    cursor: not-allowed;
+  }
+  &_pure,
+  &_submit{
+    color: $white;
+    border-radius: 24px;
+    border: $border;
+    font-size: 20px;
+    font-family: $code-font;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+  }
+  &_submit{
+    background: $button-bg;
+  }
+}
+
+.config{
+  font-family: $code-font;
+  font-size: 14px;
+}
+
+.content {
+  margin: 50px 0;
+}
+.section{
+  background: $section-bg;
+  box-shadow: $section-inner, $section-shadow, $section-doubled;
+  padding: $padding-lg;
+  border-radius: $radius-lg;
+  border: 1px solid $form-stroke;
+  backdrop-filter: blur(8px);
+  @media (max-width: 1440px) {
+    max-width: 95%;
+  }
+}
+
+.row{
+  border-radius: $radius-md;
+  background: transparent;
+  backdrop-filter: none;
+  isolation: isolate;
+  box-sizing: border-box;
+  transition: all .4s ease;
+  z-index: 0;
+  position: relative;
+
+  &:before,
+  &:after{
+    inset: 0;
+    position: absolute;
+    content: '';
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+  }
+  
+  &:before{
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: $row-bg;
+    box-shadow: $glass-shadow;
+  }
+
+  &:after{
+    width: calc(100% - 1px);
+    height: calc(100% - 1px);
+    left: -1px;
+    top: -1px;
+    padding: 1px;
+    background: $glass-border-bg;
+    mask: $glass-border-mask;
+    mask-composite: exclude;
+    -webkit-mask: $glass-border-mask;
+    -webkit-mask-composite: xor;
+  }
+}
+
+.form_row{
+  .input:first-child{
+    width: 60%;
+  }
+  &.full{ .input { width: 100% }; }
+}
+
+.input_wide{
+  height: 48px;
+  border: none;
+  background: $row-bg;
+  backdrop-filter: blur(4px);
+  border-radius: $radius-md;
+  border: $border;
+  outline: none;
+  color: $white;
+  font-size: 16px;
+  padding: 0 12px;
+  width: 100%;
+  font-family: $code-font;
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button{
+    -webkit-appearance: none;
+  }
+  &::placeholder{
+    color: rgba($white, .5);
+    font-size: 16px;
+    font-family: $code-font;
+    font-weight: 300;
+  }
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}

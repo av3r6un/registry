@@ -1,0 +1,44 @@
+main:
+  title: Home
+  load_failed: There is an error while loading
+
+general:
+  on: 'on'
+  off: 'off'
+  input_placeholder: 'Enter text'
+  selection_placeholder: 'Select a value'
+
+domain:
+  config:
+    title: Generated config
+
+edit:
+  edit_title: Edit record
+  create_title: Create record
+  form:
+    domain: Domain
+    proxy_type: Proxy type
+    port: Port
+    aliases: Aliases
+    upstream: Upstream
+    listen_port: Listen port
+    upstream_port: Upstream port
+    scheme: Scheme
+    redirect: Redirect
+    submit: Submit
+    cancel: Cancel
+
+domains:
+  title: Records
+  table:
+    secured: Secured
+    ssl: SSL
+    name: Name
+    aliases: Aliases
+    listen: Listen
+    type: Type
+    upstream: Upstream
+    redirect: Redirect
+    websocket: Websocket
+    actions: Actions
+    config_file: Config file

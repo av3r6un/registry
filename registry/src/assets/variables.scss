@@ -1,0 +1,38 @@
+$code-font: 'Cascadia Mono', monospace;
+$title-font: 'Snowstorm', sans-serif;
+$text-font: 'Snowstorm', sans-serif;
+
+$background:
+  radial-gradient(circle at top left, rgba(83, 179, 255, 0.18), transparent 24%),
+  radial-gradient(circle at right 20%, rgba(140, 240, 201, 0.1), transparent 22%),
+  linear-gradient(160deg, var(--bg-0) 0%, var(--bg-1) 52%, var(--bg-2) 100%);
+$white: #EDFFFF;
+$muted: #b1bbc9;
+$glow: 0 0 40px 0 rgba(#4FAAFF, .5);
+$button-bg: linear-gradient(to right, #4DA7FF, #3C86FF);
+
+$form-stroke: #3D4E67;
+$border: 1px solid rgba(#7c8591, .2);
+$radius-lg: 12px;
+$radius-md: 8px;
+
+$title-size: 32px;
+$subtitle-size: 24px;
+$text-size: 16px;
+
+$padding-lg: 18px 28px;
+
+$section-shadow: 1px 1px 10px 0 rgba(0, 0, 0, 0.5);
+$section-inner: inset 0 0 20px 0 rgba($white, .08);
+$section-doubled: 0px 8px 12px 0 rgba(0, 0, 0, .25);
+$section-bg: linear-gradient(135deg, rgba(8, 18, 34, 0.4) 0%, rgba(12, 29, 48, 0.4) 100%);
+
+$header-shadow: 0px 0px 40px rgba(#4FAAFF, .5);
+
+$row-bg: rgba(#08111E, .05);
+
+$code-section-bg: rgba(#08111E, .2);
+
+$glass-shadow: $section-inner, $section-doubled, $section-shadow;
+$glass-border-bg: linear-gradient(3deg, #67718D, transparent, #67718D);
+$glass-border-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);

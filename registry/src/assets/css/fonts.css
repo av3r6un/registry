@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&display=swap');
+
+@font-face {
+  font-family: 'Snowstorm', sans-serif;
+  src: url('../fonts/Snowstorm.otf') format('opentype');
+  font-style: normal;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Snowstorm', sans-serif;
+  src: url('../fonts/Snowstorm\ Light.otf') format('opentype');
+  font-style: normal;
+  font-weight: 300;
+}
