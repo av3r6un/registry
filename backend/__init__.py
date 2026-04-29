@@ -15,7 +15,11 @@ if sys.platform == 'win32':
 LOG_FILENAME = 'logs/all.log' if sys.platform == 'win32' else '/var/log/registry/all.log'
 async def db_ctx(app: Application):
   from .utils.engine import session_maker, dispose
+  from .services.config_importer import NginxConfigImporter
   app['db_sessionmaker'] = session_maker
+  async with session_maker() as session:
+    stats = await NginxConfigImporter(settings).import_current_configs(session)
+    logging.info('Nginx config import completed: %s', stats)
   yield
   await dispose()
   
