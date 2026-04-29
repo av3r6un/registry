@@ -39,6 +39,9 @@ async def basic_auth_middleware(req: Request, handler, *args, **kwargs):
 
 @middleware
 async def db_middleware(req: Request, handler, *args, **kwargs):
+  if req.path != '/api' and not req.path.startswith('/api/'):
+    return await handler(req, *args, **kwargs)
+
   session_factory: async_sessionmaker[AsyncSession] = req.app['db_sessionmaker']
   async with session_factory() as session:
     try:
