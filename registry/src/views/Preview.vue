@@ -82,7 +82,7 @@ export default {
     async enableSSL() {
       this.loading = true;
       try {
-        const resp = await this.backend.post(`/domains/${this.$route.params.id}/issue-certificate`)
+        const resp = await this.backend.post(`/domains/${this.$route.params.id}/certificate`)
         this.domain = resp;
       } catch (err) {
         this.error = this.backend.msg;
