@@ -128,7 +128,7 @@ def normalize_port(value: Any, error: str) -> int:
 
 
 def normalize_enum(value: Any, enum_cls, default):
-  if value is None:
+  if value is None or value == '':
     return default
   if isinstance(value, enum_cls):
     return value
