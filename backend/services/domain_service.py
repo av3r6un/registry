@@ -27,7 +27,8 @@ class DomainService:
     return domain
   
   async def all(self, session, **kwargs) -> dict[str, Any]:
-    return await Domain.get_json(session, **kwargs)
+    domains = await Domain.all(session, **kwargs)
+    return [domain.frontend_json for domain in domains]
   
   async def create_domain(self, session: AsyncSession, data: dict[str, Any]) -> dict:
     payload = normalize_payload(data)
@@ -38,7 +39,7 @@ class DomainService:
     domain.deployments = [self.build_deployment(payload)]
     session.add(domain)
     await session.commit()
-    return domain.json
+    return domain.frontend_json
   
   async def update_domain(self, session: AsyncSession, data: dict[str, Any]) -> dict:
     domain = await self.find(session, id=data.get('id'))
@@ -53,7 +54,7 @@ class DomainService:
     domain.server_names = [DomainServerName(**a) for a in payload['server_names']]
     domain.deployments.append(self.build_deployment(payload))
     await session.commit()
-    return domain.json
+    return domain.frontend_json
   
   async def apply_domain(self, session: AsyncSession, domain_id: int, **kwargs) -> dict:
     domain = await self.find(session, id=domain_id)
@@ -77,7 +78,7 @@ class DomainService:
     domain.enabled = True
     domain.status = DomainStatus.ACTIVE
     await session.commit()
-    return domain.json
+    return domain.frontend_json
   
   async def issue_certificate(self, session: AsyncSession, domain_id: int) -> dict:
     domain = await self.find(session, id=domain_id)
@@ -147,7 +148,7 @@ class DomainService:
     domain.enabled = True
     domain.status = DomainStatus.ACTIVE
     await session.commit()
-    return domain.json
+    return domain.frontend_json
   
   async def disable_domain(self, session: AsyncSession, domain_id: int) -> dict:
     domain = await self.find(session, id=domain_id)
@@ -157,7 +158,7 @@ class DomainService:
     domain.enabled = False
     domain.status = DomainStatus.DISABLED
     await session.commit()
-    return domain.json
+    return domain.frontend_json
   
   async def delete(self, session: AsyncSession, domain_id: int) -> dict:
     domain = await self.find(session, id=domain_id)
