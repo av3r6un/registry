@@ -16,7 +16,7 @@ async def get_domain(req: Request, session: AsyncSession):
   domain_id = req.match_info.get('id')
   try:
     domain = await domain_service.find(session, **dict(id=domain_id))
-    return json_response(dict(status='success', body=domain.frontend_json))
+    return json_response(dict(status='success', body=domain.json))
   except DomainNotFound:
     return json_response(dict(status='error', message=f'Domain[{domain_id}] not found!'), status=404)
   except Exception as e:

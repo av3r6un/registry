@@ -53,17 +53,17 @@ def normalize_name(value: Any, domain_type: DomainType) -> str:
 
 def normalize_route(initial: dict[str, Any], domain_type: DomainType) -> dict[str, Any]:
   route = nested_dict(initial.get('route'))
-  scheme = normalize_enum(
-    initial.get('upstream_scheme', initial.get('scheme', route.get('upstream_scheme'))),
-    UpstreamScheme,
-    UpstreamScheme.HTTP,
-  )
+  raw_scheme = initial.get('upstream_scheme', initial.get('scheme', route.get('upstream_scheme')))
   listen_port = initial.get('listen_port', route.get('listen_port'))
-  stream_protocol = normalize_enum(
-    initial.get('stream_protocol', route.get('stream_protocol')),
-    StreamProtocol,
-    StreamProtocol.TCP,
-  )
+  raw_stream_protocol = initial.get('stream_protocol', route.get('stream_protocol', route.get('scheme')))
+
+  # Some frontend payloads reuse `scheme` for stream proxies and send `tcp`/`udp` there.
+  if domain_type == DomainType.PORT_PROXY and raw_stream_protocol is None and raw_scheme in ('tcp', 'udp'):
+    raw_stream_protocol = raw_scheme
+    raw_scheme = None
+
+  scheme = normalize_enum(raw_scheme, UpstreamScheme, UpstreamScheme.HTTP)
+  stream_protocol = normalize_enum(raw_stream_protocol, StreamProtocol, StreamProtocol.TCP)
 
   if domain_type == DomainType.PORT_PROXY:
     scheme = UpstreamScheme.STREAM
@@ -135,8 +135,12 @@ def normalize_enum(value: Any, enum_cls, default):
   try:
     return enum_cls(value)
   except ValueError as exc:
-    raise ValueError(f'invalid_{enum_cls.__name__.lower()}') from exc
+    raise ValueError(f'invalid_{camel_to_snake(enum_cls.__name__)}') from exc
 
 
 def nested_dict(value: Any) -> dict[str, Any]:
   return value if isinstance(value, dict) else {}
+
+
+def camel_to_snake(value: str) -> str:
+  return re.sub(r'(?<!^)(?=[A-Z])', '_', value).lower()
