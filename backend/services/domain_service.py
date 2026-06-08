@@ -50,7 +50,7 @@ class DomainService:
         setattr(domain.route, k, v)
     else:
       domain.route = DomainRoute(**payload['route'])
-    domain.server_names = [DomainServerName(**a) for a in payload['server_names']]
+    self.sync_server_names(domain, payload['server_names'])
     domain.deployments.append(self.build_deployment(payload))
     await session.commit()
     return domain.json
@@ -216,6 +216,24 @@ class DomainService:
   def domain_to_filename(self, name: str) -> str:
     safe = ''.join(ch for ch in name.lower() if ch.isalnum() or ch in '.-')
     return f'{safe}.conf'
+
+  def sync_server_names(self, domain: Domain, payload_names: list[dict[str, Any]]) -> None:
+    existing = {row.name: row for row in domain.server_names}
+    ordered = []
+
+    for item in payload_names:
+      row = existing.pop(item['name'], None)
+      if row is None:
+        row = DomainServerName(**item)
+      else:
+        row.is_primary = item['is_primary']
+      ordered.append(row)
+
+    for row in existing.values():
+      if row in domain.server_names:
+        domain.server_names.remove(row)
+
+    domain.server_names = ordered
 
   def nginx_paths(self, domain_type: DomainType, filename: str) -> tuple[str, str]:
     if domain_type == DomainType.PORT_PROXY:
