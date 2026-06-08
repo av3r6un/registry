@@ -8,8 +8,11 @@ HOSTNAME_RE = re.compile(r'^(?=.{1,253}$)(?!-)(?:[a-zA-Z0-9-]{1,63}\.)*[a-zA-Z0-
 
 
 def normalize_payload(initial: dict[str, Any], existing: dict[str, Any] | None = None) -> dict[str, Any]:
-  domain_type = normalize_domain_type(initial.get('type', initial.get('proxy_type', DomainType.HOSTNAME.value)))
-  name = normalize_name(initial.get('name', initial.get('domain')), domain_type)
+  domain = nested_dict(initial.get('domain'))
+  domain_type = normalize_domain_type(
+    initial.get('type', initial.get('proxy_type', domain.get('type', DomainType.HOSTNAME.value)))
+  )
+  name = normalize_name(initial.get('name', initial.get('domain', domain.get('name'))), domain_type)
   route = normalize_route(initial, domain_type)
   server_names = normalize_server_names(initial.get('server_names'), name) if domain_type == DomainType.HOSTNAME else []
 
@@ -49,9 +52,18 @@ def normalize_name(value: Any, domain_type: DomainType) -> str:
 
 
 def normalize_route(initial: dict[str, Any], domain_type: DomainType) -> dict[str, Any]:
-  scheme = normalize_enum(initial.get('upstream_scheme', initial.get('scheme')), UpstreamScheme, UpstreamScheme.HTTP)
-  listen_port = initial.get('listen_port')
-  stream_protocol = normalize_enum(initial.get('stream_protocol'), StreamProtocol, StreamProtocol.TCP)
+  route = nested_dict(initial.get('route'))
+  scheme = normalize_enum(
+    initial.get('upstream_scheme', initial.get('scheme', route.get('upstream_scheme'))),
+    UpstreamScheme,
+    UpstreamScheme.HTTP,
+  )
+  listen_port = initial.get('listen_port', route.get('listen_port'))
+  stream_protocol = normalize_enum(
+    initial.get('stream_protocol', route.get('stream_protocol')),
+    StreamProtocol,
+    StreamProtocol.TCP,
+  )
 
   if domain_type == DomainType.PORT_PROXY:
     scheme = UpstreamScheme.STREAM
@@ -62,8 +74,14 @@ def normalize_route(initial: dict[str, Any], domain_type: DomainType) -> dict[st
     listen_port = None
 
   return dict(
-    upstream_host=normalize_hostname(initial.get('upstream_host'), 'invalid_upstream_host'),
-    upstream_port=normalize_port(initial.get('upstream_port'), 'invalid_upstream_port'),
+    upstream_host=normalize_hostname(
+      initial.get('upstream_host', route.get('upstream_host')),
+      'invalid_upstream_host',
+    ),
+    upstream_port=normalize_port(
+      initial.get('upstream_port', route.get('upstream_port')),
+      'invalid_upstream_port',
+    ),
     upstream_scheme=scheme,
     listen_port=listen_port,
     stream_protocol=stream_protocol,
@@ -118,3 +136,7 @@ def normalize_enum(value: Any, enum_cls, default):
     return enum_cls(value)
   except ValueError as exc:
     raise ValueError(f'invalid_{enum_cls.__name__.lower()}') from exc
+
+
+def nested_dict(value: Any) -> dict[str, Any]:
+  return value if isinstance(value, dict) else {}

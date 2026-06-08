@@ -26,7 +26,6 @@ async def get_domain(req: Request, session: AsyncSession):
 @domains.post('/api/domains')
 async def create_domain(req: Request, session: AsyncSession):
   data = (await req.json())
-  print(data)
   try:
     row = await domain_service.create_domain(session, data)
     return json_response(dict(status='success', body=row), status=201)
