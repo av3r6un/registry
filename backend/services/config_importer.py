@@ -39,6 +39,7 @@ class NginxConfigImporter:
         action = await self.upsert_config(session, config)
         stats[action] += 1
       except Exception:
+        await session.rollback()
         stats['errors'] += 1
         logger.exception('Failed to import nginx config: %s', config.enabled_path)
     await session.commit()
@@ -196,8 +197,8 @@ class NginxConfigImporter:
       changed = True
 
     names = [a['name'] for a in payload['server_names']]
-    if [a.name for a in domain.server_names] != names:
-      domain.server_names = [DomainServerName(**a) for a in payload['server_names']]
+    if [a.name for a in domain.server_names] != names or [a.is_primary for a in domain.server_names] != [a['is_primary'] for a in payload['server_names']]:
+      self.sync_server_names(domain, payload['server_names'])
       changed = True
 
     latest = max(domain.deployments, key=lambda a: a.created) if domain.deployments else None
@@ -210,6 +211,24 @@ class NginxConfigImporter:
       changed = True
 
     return 'updated' if changed else 'skipped'
+
+  def sync_server_names(self, domain: Domain, payload_names: list[dict[str, Any]]) -> None:
+    existing = {row.name: row for row in domain.server_names}
+    ordered = []
+
+    for item in payload_names:
+      row = existing.pop(item['name'], None)
+      if row is None:
+        row = DomainServerName(**item)
+      else:
+        row.is_primary = item['is_primary']
+      ordered.append(row)
+
+    for row in existing.values():
+      if row in domain.server_names:
+        domain.server_names.remove(row)
+
+    domain.server_names = ordered
 
   def build_deployment(self, config: ImportedConfig) -> DomainDeployment:
     return DomainDeployment(
